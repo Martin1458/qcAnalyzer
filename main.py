@@ -29,6 +29,7 @@ def main():
         buttons = [joystick.get_button(i) for i in range(joystick.get_numbuttons())]
         #print("Buttons:", buttons)
         if any(buttons):
+            Ana.save_recorded("recorded.txt")
             running = False
         
         # Axes
