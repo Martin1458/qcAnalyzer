@@ -2,7 +2,7 @@ import time
 import json
 
 class Analyzer:
-    def __init__(self):
+    def __init__(self, base_dir=None):
         # Hats history: hats_history = [[time.time(), hats], ...]
         self.hats_history = [[0, (0, 0)], [0, (0, 0)]]
         self.UP = (0, 1)
@@ -11,10 +11,17 @@ class Analyzer:
         self.RIGHT = (1, 0)
         self.recorded = []
         self.DIR_NAMES = {0: "down", 1: "up", 2: "right", 3: "left"}
+        self.on_chat_recognized = None
 
-        with open("image_filled.json") as f:
+        def _open(name):
+            if base_dir is not None:
+                import pathlib
+                return open(pathlib.Path(base_dir) / name)
+            return open(name)
+
+        with _open("image_filled.json") as f:
             self.image_filled = json.load(f)
-        with open("qc_options.json") as f:
+        with _open("qc_options.json") as f:
             self.qc_options = json.load(f)
 
     def add(self, hats):
@@ -41,6 +48,8 @@ class Analyzer:
             qc_id = self.image_filled.get(a_name, {}).get(b_name)
             message = self.qc_options.get(qc_id, "Unknown")
             print(f"Quick chat: {message}")
+            if self.on_chat_recognized:
+                self.on_chat_recognized(message)
             self.record((a_name, b_name))
 
     def get_dir(self, hat):

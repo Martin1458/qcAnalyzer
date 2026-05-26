@@ -90,6 +90,7 @@ def parse(image_path, options_path, output_path):
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=4)
     print(f"\nWrote {output_path}")
+    return result
 
 
 if __name__ == "__main__":
