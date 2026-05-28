@@ -1,10 +1,11 @@
+import sys
 import tkinter as tk
 import multiprocessing
 from pathlib import Path
 
 from gui.app_window import AppWindow
 
-BASE_DIR = Path(__file__).parent
+BASE_DIR = Path(getattr(sys, '_MEIPASS', Path(__file__).parent))
 
 if __name__ == "__main__":
     multiprocessing.freeze_support()
