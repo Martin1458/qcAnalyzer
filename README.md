@@ -2,6 +2,10 @@
 
 Tracks and analyzes the quick chats you send during Rocket League matches. Connects to your controller, records every d-pad combo in real time, and shows you breakdowns of what you actually spam.
 
+The app reads d-pad inputs from your controller and maps them to your in-game quick chat layout — the same one you configure in Rocket League's settings:
+
+![Rocket League quick chat settings](image.png)
+
 ## What it does
 
 - Detects quick chats from your controller's d-pad inputs
