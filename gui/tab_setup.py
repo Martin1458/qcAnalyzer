@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
+from PIL import Image, ImageTk
 import json
 import pathlib
 import shutil
@@ -43,15 +44,44 @@ class SetupTab(ttk.Frame):
         # --- Section A: Screenshot upload ---
         upload_frame = ttk.LabelFrame(self, text="Setup from Screenshot (OCR)")
         upload_frame.grid(row=0, column=0, sticky="ew", padx=10, pady=(10, 4))
-        upload_frame.columnconfigure(1, weight=1)
+        upload_frame.columnconfigure(0, weight=1)
 
-        ttk.Button(upload_frame, text="Upload Screenshot", command=self._on_upload).grid(
-            row=0, column=0, padx=8, pady=8
+        # Left side: controls
+        left = ttk.Frame(upload_frame)
+        left.grid(row=0, column=0, sticky="nsw", padx=(8, 4), pady=8)
+
+        ttk.Button(left, text="Upload Screenshot", command=self._on_upload).grid(
+            row=0, column=0, columnspan=2, sticky="w", pady=(0, 6)
         )
-        self._ocr_status = ttk.Label(upload_frame, text="No screenshot processed yet.")
-        self._ocr_status.grid(row=0, column=1, padx=8, pady=8, sticky="w")
-        self._progress = ttk.Progressbar(upload_frame, mode="indeterminate")
-        self._progress.grid(row=1, column=0, columnspan=2, sticky="ew", padx=8, pady=(0, 8))
+        self._ocr_status = ttk.Label(left, text="No screenshot processed yet.")
+        self._ocr_status.grid(row=1, column=0, columnspan=2, sticky="w")
+        self._progress = ttk.Progressbar(left, mode="indeterminate", length=220)
+        self._progress.grid(row=2, column=0, columnspan=2, sticky="ew", pady=(6, 8))
+
+        info_text = (
+            "Take a screenshot of the Chat tab in\n"
+            "Rocket League's Settings and upload it.\n"
+            "The app will read your layout automatically."
+        )
+        ttk.Label(left, text=info_text, foreground="gray", justify="left").grid(
+            row=3, column=0, columnspan=2, sticky="w"
+        )
+
+        # Right side: reference image
+        ref_img_path = self._base_dir / "image.png"
+        if ref_img_path.exists():
+            try:
+                img = Image.open(ref_img_path)
+                img.thumbnail((360, 220))
+                self._ref_photo = ImageTk.PhotoImage(img)
+                right = ttk.Frame(upload_frame)
+                right.grid(row=0, column=1, sticky="nse", padx=(4, 8), pady=8)
+                ttk.Label(right, image=self._ref_photo).grid(row=0, column=0)
+                ttk.Label(right, text="Example screenshot", foreground="gray").grid(
+                    row=1, column=0, pady=(2, 0)
+                )
+            except Exception:
+                pass
 
         # --- Section B: Manual 4x4 grid editor ---
         grid_frame = ttk.LabelFrame(self, text="Manual Mapping Editor")
